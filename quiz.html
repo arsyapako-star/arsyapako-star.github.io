@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: beige;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .question {
+            font-size: 18px;
+            font-weight: bold;
+            min-height: 60px;
+            margin-bottom: 20px;
+            color: chocolate;
+        }
+        .btn {
+            font-size: 16px;
+            padding: 12px 24px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 120px;
+        }
+        .btn-true { background-color: #4CAF50; color: white; }
+        .btn-true:hover { background-color: #45a049; }
+        .btn-false { background-color: #f44336; color: white; }
+        .btn-false:hover { background-color: #da190b; }
+        .btn-restart { background-color: #2196F3; color: white; width: auto; }
+        .btn-restart:hover { background-color: #0b7dda; }
+        .feedback {
+            margin-top: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            min-height: 24px;
+        }
+    </style>
+</head>
+<body>
+    
+<div class="quiz-container">
+    <font color = "chocolate"><h2>ARSYA PAKO QUIZ</h2></font>
+    <font color = "chocolate"><div id="progress-panel" class="progress">Question 1 of 10</div></font>
+    <font color = "chocolate"><div id="question-box" class="question">Loading question...</div></font>
+    
+    <div id="action-buttons">
+        <button class="btn btn-true" onclick="handleAnswer(true)">True</button>
+        <button class="btn btn-false" onclick="handleAnswer(false)">False</button>
+    </div>
+    
+    <div id="feedback-box" class="feedback"></div>
+</div>
+
+<script>
+    // Database of 10 sample True or False questions
+    const quizData = [
+        { q: "apakah pako lahir ditahun 2013?", a: false },
+        { q: "apakah pako bisa main basket?", a: true },
+        { q: "apakah pako les di cls?", a: true },
+        { q: "apakah bahasa pertama pako bahasa indonesia?", a: false },
+        { q: "apakah pako pernah backflip yang sempurna?", a: false },
+        { q: "apakah pako pernah nonton basket dilapangan langsung?", a: true },
+        { q: "apakah pako pernah ke jakarta?", a: false },
+        { q: "apakah tingginya pako 145 cm di tahun 2026 bulan september?", a: false },
+        { q: "pako menghabiskan waktunya buat main game basket.", a: true },
+        { q: "pako pernah ke jogja kah?", a: true }
+    ];
+
+    let currentQuestionIndex = 0;
+    let userScore = 0;
+
+    const progressPanel = document.getElementById("progress-panel");
+    const questionBox = document.getElementById("question-box");
+    const actionButtons = document.getElementById("action-buttons");
+    const feedbackBox = document.getElementById("feedback-box");
+
+    function renderQuestion() {
+        feedbackBox.innerText = ""; // Clear old message
+        
+        if (currentQuestionIndex < quizData.length) {
+            // Update UI with current question data
+            progressPanel.innerText = `Question ${currentQuestionIndex + 1} of ${quizData.length}`;
+            questionBox.innerText = quizData[currentQuestionIndex].q;
+            actionButtons.innerHTML = `
+                <button class="btn btn-true" onclick="handleAnswer(true)">True</button>
+                <button class="btn btn-false" onclick="handleAnswer(false)">False</button>
+            `;
+        } else {
+            // End of quiz evaluation state reached
+            showFinalResults();
+        }
+    }
+
+    function handleAnswer(userAnswer) {
+        const correctAnswer = quizData[currentQuestionIndex].a;
+        
+        if (userAnswer === correctAnswer) {
+            userScore++;
+            feedbackBox.innerText = "lets see the results later...";
+            feedbackBox.style.color = "chocolate";
+        } else {
+            feedbackBox.innerText = "lets see the results later...";
+            feedbackBox.style.color = "chocolate";
+        }
+
+        // Disable input options momentarily to let user process feedback message
+        actionButtons.querySelectorAll('button').forEach(btn => btn.disabled = true);
+
+        // Advance sequence state forward after a brief delay
+        setTimeout(() => {
+            currentQuestionIndex++;
+            renderQuestion();
+        }, 1200);
+    }
+
+    function showFinalResults() {
+        progressPanel.innerText = "Quiz Completed!";
+        questionBox.innerText = `You scored ${userScore} out of ${quizData.length}!`;
+        feedbackBox.innerText = userScore >= 7 ? "Great job! 🏆" : "Keep practicing! 👍";
+        feedbackBox.style.color = "#333";
+    }
+
+    function restartQuiz() {
+        currentQuestionIndex = 0;
+        userScore = 0;
+        renderQuestion();
+    }
+
+    // Initialize application execution state immediately
+    renderQuestion();
+</script>
+</body>
+</html>
